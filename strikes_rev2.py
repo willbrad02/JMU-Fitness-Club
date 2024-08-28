@@ -121,7 +121,7 @@ if strike_response == 'y':
 
     print(f'\n\nStrikes are being given out. This could take awhile...\n\n')
 
-    # List to hold anyone at 3 strikes
+    # List to hold anyone at 5 strikes
     members_to_kick = []
 
     # Find absentee in roster, give strike
@@ -135,7 +135,7 @@ if strike_response == 'y':
                 # Get num strikes
                 member_num_strikes = strike_worksheet.get_value(f'{strikes_column_letter}{row_num}').strip()
 
-                # Add strike(s) if at 1 or 2
+                # Add strike(s) if at 1-4
                 if member_num_strikes.isnumeric():
                     strike_worksheet.update_value(f'{strikes_column_letter}{row_num}',
                                                   f'{int(member_num_strikes) + num_strikes_to_give}')
@@ -146,17 +146,21 @@ if strike_response == 'y':
 
                 # Get new num strikes and check if any members are at 3 strikes. Compatible with any strike amount >= 3
                 member_num_strikes = strike_worksheet.get_value(f'{strikes_column_letter}{row_num}').strip()
-                if member_num_strikes >= '3':
+                if member_num_strikes >= '5':
                     members_to_kick.append(member.title())
 
                 # Determine print color for strike number
                 print_color = None
                 if int(member_num_strikes) == 1:
-                    print_color = Fore.LIGHTGREEN_EX
+                    print_color = Fore.GREEN
                 elif int(member_num_strikes) == 2:
+                    print_color = Fore.LIGHTGREEN_EX
+                elif int(member_num_strikes) == 3:
                     print_color = Fore.LIGHTYELLOW_EX
-                else:
+                elif int(member_num_strikes) == 4:
                     print_color = Fore.LIGHTRED_EX
+                else:
+                    print_color = Fore.RED
 
                 # Report progress
                 print(f'Gave a strike to {member.title()}. {member.title()} now has '
@@ -169,4 +173,4 @@ if strike_response == 'y':
     print(f'\n{Fore.LIGHTGREEN_EX}Successfully updated strikes.{Fore.RESET}\n')
 
     # Report if anyone at 3 strikes. Print in bold letters
-    print(f'\033[1mThe following people have 3 strikes and should be kicked out:\n\033[0m{members_to_kick}')
+    print(f'\033[1mThe following people have 5 strikes and should be kicked out:\n\033[0m{members_to_kick}')
